@@ -1,0 +1,23 @@
+{
+  "name": "express-employee-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lib1001/Express-Employee-Tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lib1001/Express-Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/lib1001/Express-Employee-Tracker#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3"
+  }
+}
