@@ -30,7 +30,8 @@ const menu = () => {
         "Add a department",
         "Add a role",
         "Add an employee",
-        "I'm done!",
+        // "Update an employee role",
+        "I'm done!\n",
       ],
     })
     .then((response) => {
@@ -64,7 +65,7 @@ const menu = () => {
 };
 
 const viewDepts = () => {
-  db.query("SELECT * FROM department", (err, res) => {
+  db.query(`SELECT * FROM department`, (err, res) => {
     if (err) throw err;
     console.table(res);
     menu();
@@ -72,11 +73,11 @@ const viewDepts = () => {
 };
 
 const viewRoles = () => {
-  db.query(`SELECT * FROM role`, (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    menu();
-  });
+    db.query(`SELECT * FROM role`, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        menu();
+    })
 };
 
 const viewEmployees = () => {
@@ -114,7 +115,7 @@ const addRole = () => {
       {
         type: "input",
         message: "Enter the role you would like to add.",
-        name: "roleName",
+        name: "roleTitle",
       },
       {
         type: "input",
@@ -129,8 +130,8 @@ const addRole = () => {
     ])
     .then((response) => {
       db.query(
-        `INSERT INTO role(name, salary, department_id) VALUES ( ?, ?, ?, ? )`,
-        [response.roleName, response.roleSalary, response.roleDept], (err, res) => {
+        `INSERT INTO role(title, salary, department_id) VALUES (?, ?, ?)`,
+        [response.roleTitle, response.roleSalary, response.roleDept], (err, res) => {
           if (err) throw err;
           console.table(res);
           viewRoles();
@@ -182,3 +183,71 @@ const addEmployee = () => {
       );
     });
 };
+
+
+
+
+
+
+
+
+
+
+
+// function updateRole() {
+//     db.query(`SELECT * FROM employee`, function (err, res) {
+//         if (err) return console.log(err);
+//         inquirer.prompt([
+//             {
+//                 name: 'whichEmployeee',
+//                 type: 'list',
+//                 message: 'Which employee is changing roles?',
+//                 choices: res.map(employee => /////////////////////////////////////////////////////
+//                 ({
+//                     name: employee.first_name + ' ' + employee.last_name,
+//                     value: employee.id
+//                 })
+//                 )
+//             },
+//             {
+//                 name: 'updatedRole',
+//                 type: 'rawlist',
+//                 message: 'Which role is being assigned to this employee?',
+//                 choices: res.map(role =>
+//                     ({
+//                         name: role.title,
+//                         value: role.id
+//                     }))
+//             }
+//         ]).then((data) => {
+//             db.query(`
+//             UPDATE employee SET role_id = ? WHERE id = ?`, [data.whichEmployeee, data.updatedRole],
+//                 function (err) {
+//                     if (err) return console.log(err);
+//                     openingPrompt();
+//                 })
+//         })
+//     })
+// };
+
+
+// app.put('/api/review/:id', (req, res) => {
+//   const sql = `UPDATE reviews SET review = ? WHERE id = ?`;
+//   const params = [req.body.review, req.params.id];
+
+//   db.query(sql, params, (err, result) => {
+//     if (err) {
+//       res.status(400).json({ error: err.message });
+//     } else if (!result.affectedRows) {
+//       res.json({
+//         message: 'Movie not found'
+//       });
+//     } else {
+//       res.json({
+//         message: 'success',
+//         data: req.body,
+//         changes: result.affectedRows
+//       });
+//     }
+//   });
+// });
