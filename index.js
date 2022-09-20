@@ -73,19 +73,39 @@ const viewDepts = () => {
 };
 
 const viewRoles = () => {
-    db.query(`SELECT * FROM role`, (err, res) => {
-        if (err) throw err;
-        console.table(res);
-        menu();
-    })
+  db.query(
+    `SELECT role.id,
+    role.title,
+    department.name AS department,
+    role.salary
+    FROM role 
+    JOIN department ON role.department_id=department.id`,
+    (err, res) => {
+      if (err) throw err;
+      console.table(res);
+      menu();
+    }
+  );
 };
 
 const viewEmployees = () => {
-  db.query(`SELECT * FROM employee`, (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    menu();
-  });
+  db.query(
+    `SELECT employee.id,
+  employee.first_name,
+  employee.last_name, 
+  role.title,
+  department.name AS department,
+  role.salary,CONCAT(e.first_name,' ',e.last_name ) AS manager 
+  FROM employee 
+  JOIN role ON employee.role_id = role.id
+  JOIN department ON department.id = role.department_id
+  LEFT JOIN employee e ON employee.manager_id = e.id`,
+    (err, res) => {
+      if (err) throw err;
+      console.table(res);
+      menu();
+    }
+  );
 };
 
 const addDept = () => {
@@ -131,7 +151,8 @@ const addRole = () => {
     .then((response) => {
       db.query(
         `INSERT INTO role(title, salary, department_id) VALUES (?, ?, ?)`,
-        [response.roleTitle, response.roleSalary, response.roleDept], (err, res) => {
+        [response.roleTitle, response.roleSalary, response.roleDept],
+        (err, res) => {
           if (err) throw err;
           console.table(res);
           viewRoles();
@@ -161,7 +182,8 @@ const addEmployee = () => {
       },
       {
         type: "input",
-        message: "Enter the manager id number for the employee you would like to add.",
+        message:
+          "Enter the manager id number for the employee you would like to add.",
         name: "employeeManager",
       },
     ])
@@ -184,15 +206,14 @@ const addEmployee = () => {
     });
 };
 
-
-
-
-
-
-
-
-
-
+// const updateRole = () => {
+//     inquirer
+//       .prompt([
+//         {
+//           type: "input",
+//           message: "Enter the FIRST NAME of the employee you would like to add.",
+//           name: "firstName",
+//         },
 
 // function updateRole() {
 //     db.query(`SELECT * FROM employee`, function (err, res) {
@@ -229,7 +250,6 @@ const addEmployee = () => {
 //         })
 //     })
 // };
-
 
 // app.put('/api/review/:id', (req, res) => {
 //   const sql = `UPDATE reviews SET review = ? WHERE id = ?`;
