@@ -49,11 +49,24 @@ const db = mysql.createConnection(
     })
 };
 
+menu();
+
 //call menu() at the end of each
-viewDepts();
-viewRoles();
-viewEmployees();
-addDept();
-addRole();
-addEmployee();
-updateRole();
+const viewDepts = () => {
+    db.query('SELECT * FROM department', (err, res) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log('===============');
+        console.table(res);
+    });
+
+    menu();
+};
+
+const viewRoles();
+const viewEmployees();
+const addDept();
+const addRole();
+const addEmployee();
+const updateRole();
