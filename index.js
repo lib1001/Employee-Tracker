@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const consoleTable = require("console.table");
+const { exit } = require("process");
 
 const db = mysql.createConnection(
   {
@@ -31,7 +32,7 @@ const menu = () => {
         "Add a role",
         "Add an employee",
         // "Update an employee role",
-        "I'm done!\n",
+        "I'm done!",
       ],
     })
     .then((response) => {
@@ -54,12 +55,10 @@ const menu = () => {
         case "Add an employee":
           return addEmployee();
           break;
-        // case 'Update an employee role':
-        //     return updateRole();
-        //     break;
+        case "I'm done!":
+        return exit();
         default:
           return console.log("All set!");
-          break; //how to exit out when done?
       }
     });
 };
@@ -205,69 +204,3 @@ const addEmployee = () => {
       );
     });
 };
-
-// const updateRole = () => {
-//     inquirer
-//       .prompt([
-//         {
-//           type: "input",
-//           message: "Enter the FIRST NAME of the employee you would like to add.",
-//           name: "firstName",
-//         },
-
-// function updateRole() {
-//     db.query(`SELECT * FROM employee`, function (err, res) {
-//         if (err) return console.log(err);
-//         inquirer.prompt([
-//             {
-//                 name: 'whichEmployeee',
-//                 type: 'list',
-//                 message: 'Which employee is changing roles?',
-//                 choices: res.map(employee => /////////////////////////////////////////////////////
-//                 ({
-//                     name: employee.first_name + ' ' + employee.last_name,
-//                     value: employee.id
-//                 })
-//                 )
-//             },
-//             {
-//                 name: 'updatedRole',
-//                 type: 'rawlist',
-//                 message: 'Which role is being assigned to this employee?',
-//                 choices: res.map(role =>
-//                     ({
-//                         name: role.title,
-//                         value: role.id
-//                     }))
-//             }
-//         ]).then((data) => {
-//             db.query(`
-//             UPDATE employee SET role_id = ? WHERE id = ?`, [data.whichEmployeee, data.updatedRole],
-//                 function (err) {
-//                     if (err) return console.log(err);
-//                     openingPrompt();
-//                 })
-//         })
-//     })
-// };
-
-// app.put('/api/review/:id', (req, res) => {
-//   const sql = `UPDATE reviews SET review = ? WHERE id = ?`;
-//   const params = [req.body.review, req.params.id];
-
-//   db.query(sql, params, (err, result) => {
-//     if (err) {
-//       res.status(400).json({ error: err.message });
-//     } else if (!result.affectedRows) {
-//       res.json({
-//         message: 'Movie not found'
-//       });
-//     } else {
-//       res.json({
-//         message: 'success',
-//         data: req.body,
-//         changes: result.affectedRows
-//       });
-//     }
-//   });
-// });
