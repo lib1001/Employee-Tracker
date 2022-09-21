@@ -1,7 +1,6 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const consoleTable = require("console.table");
-const { exit } = require("process");
 
 const db = mysql.createConnection(
   {
@@ -56,9 +55,11 @@ const menu = () => {
           return addEmployee();
           break;
         case "I'm done!":
-        return exit();
+        return db.end();
+        break;
         default:
-          return console.log("All set!");
+          return '';
+          break;
       }
     });
 };
@@ -120,8 +121,6 @@ const addDept = () => {
         response.deptName,
         (err, res) => {
           if (err) throw err;
-          console.table(res);
-          viewDepts();
           menu();
         }
       );
@@ -129,7 +128,7 @@ const addDept = () => {
 };
 
 const addRole = () => {
-  inquirer
+    inquirer
     .prompt([
       {
         type: "input",
@@ -153,8 +152,6 @@ const addRole = () => {
         [response.roleTitle, response.roleSalary, response.roleDept],
         (err, res) => {
           if (err) throw err;
-          console.table(res);
-          viewRoles();
           menu();
         }
       );
@@ -162,7 +159,7 @@ const addRole = () => {
 };
 
 const addEmployee = () => {
-  inquirer
+    inquirer
     .prompt([
       {
         type: "input",
@@ -197,8 +194,6 @@ const addEmployee = () => {
         ],
         (err, res) => {
           if (err) throw err;
-          console.table(res);
-          viewEmployees();
           menu();
         }
       );
