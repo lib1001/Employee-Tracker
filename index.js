@@ -9,7 +9,7 @@ const db = mysql.createConnection(
     password: "password",
     database: "employee_db",
   },
-  console.log(`Connected to the employee_db database.`)
+  console.log(`Connected to the employee_db database.\n`)
 );
 
 db.connect(function (err) {
@@ -30,7 +30,7 @@ const menu = () => {
         "Add a department",
         "Add a role",
         "Add an employee",
-        // "Update an employee role",
+        "Update an employee role",
         "I'm done!",
       ],
     })
@@ -54,9 +54,12 @@ const menu = () => {
         case "Add an employee":
           return addEmployee();
           break;
+        case "Update an employee role":
+            return updateRole();
+            break;
         case "I'm done!":
-        return db.end();
-        break;
+            return db.end();
+            break;
         default:
           return '';
           break;
@@ -121,6 +124,7 @@ const addDept = () => {
         response.deptName,
         (err, res) => {
           if (err) throw err;
+          console.log('Department has been added!\n');
           menu();
         }
       );
@@ -132,17 +136,17 @@ const addRole = () => {
     .prompt([
       {
         type: "input",
-        message: "Enter the role you would like to add.",
+        message: "Enter the role you would like to add:",
         name: "roleTitle",
       },
       {
         type: "input",
-        message: "Enter the salary of your new role.",
+        message: "Enter the salary of your new role:",
         name: "roleSalary",
       },
       {
         type: "input",
-        message: "Enter the department id number for the new role.",
+        message: "Enter the department id number for the new role:",
         name: "roleDept",
       },
     ])
@@ -152,6 +156,7 @@ const addRole = () => {
         [response.roleTitle, response.roleSalary, response.roleDept],
         (err, res) => {
           if (err) throw err;
+          console.log('Role has been added!\n');
           menu();
         }
       );
@@ -163,23 +168,23 @@ const addEmployee = () => {
     .prompt([
       {
         type: "input",
-        message: "Enter the FIRST NAME of the employee you would like to add.",
+        message: "Enter the FIRST NAME of the employee you would like to add:",
         name: "firstName",
       },
       {
         type: "input",
-        message: "Enter the LAST NAME of the employee you would like to add.",
+        message: "Enter the LAST NAME of the employee you would like to add:",
         name: "lastName",
       },
       {
         type: "input",
-        message: "Enter the role number of the employee you would like to add.",
+        message: "Enter the role number of the employee you would like to add:",
         name: "employeeRole",
       },
       {
         type: "input",
         message:
-          "Enter the manager id number for the employee you would like to add.",
+          "Enter the manager id number for the employee you would like to add:",
         name: "employeeManager",
       },
     ])
@@ -194,8 +199,39 @@ const addEmployee = () => {
         ],
         (err, res) => {
           if (err) throw err;
+          console.log('Employee has been added!\n');
           menu();
         }
       );
     });
 };
+
+const updateRole = () => {
+    inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "Which employee is changing roles?",
+        name: "empRole",
+        choices: ["John Doe", "Mike Chan", "Ashley Rodriguez", "Kevin Tupik", "Kunal Singh", "Malia Brown", "Sarah Lourd", "Tom Allen"],
+      },
+      {
+        type: "input",
+        message: "Enter the employee's new role number:",
+        name: "newRole",
+      },
+    ])
+    .then((response) => {
+        db.query(`UPDATE employee SET role_id = ? WHERE first_name = ?`, 
+        [
+            response.newRole,
+            response.empRole,
+        ],
+        (err, res) => {
+            if (err) throw err;
+            console.log('Employee role has been updated!\n');
+            menu();
+          }
+        );
+      });
+  };
